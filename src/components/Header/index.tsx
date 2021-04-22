@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 
 import styles from './styles.module.scss';
+import Link from 'next/link';
 
 const Header: React.FC = () => {
   const currentDate = format(new Date(), 'EEEEEE, d MMMM', {
@@ -12,8 +13,10 @@ const Header: React.FC = () => {
 
   return (
     <header className={styles.headerContainer}>
-      <img src="/logo.svg" alt="logo"/>
-
+      <Link href={"/"}>
+        <img src="/logo.svg" alt="logo"/>
+      </Link>
+      
       <p>O melhor para você ouvir, sempre!</p>
 
       <span>{currentDate}</span>
