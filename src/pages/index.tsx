@@ -1,8 +1,7 @@
 import { GetStaticProps } from 'next'
 import Image from 'next/image'
-import { useContext } from 'react';
 
-import {PlayerContext} from '../contexts/PlayerContext'
+import usePlayer from '../hooks/usePlayer';
 
 import Link from 'next/link'
 import {format, parseISO} from 'date-fns'
@@ -43,7 +42,9 @@ interface HomeProps {
 }
 
 export default function Home({latestEpisodes, restEpisodes}:HomeProps) {
-  const {play} = useContext(PlayerContext);
+  const {playList} = usePlayer();
+
+  const espisodeList = [...latestEpisodes, ...restEpisodes];
 
   return (
     <div className={styles.homePage}>
@@ -51,7 +52,7 @@ export default function Home({latestEpisodes, restEpisodes}:HomeProps) {
         <h2>Últimos lançamentos</h2>
 
         <ul>
-          {latestEpisodes.map(episode => {
+          {latestEpisodes.map((episode, index) => {
             return (
               <li key={episode.id}>
                 <Image 
@@ -71,7 +72,7 @@ export default function Home({latestEpisodes, restEpisodes}:HomeProps) {
                   <span>{episode.durationAsString}</span>
                 </div>
 
-                <button type="button" onClick={()=> play(episode)}>
+                <button type="button" onClick={()=> playList(espisodeList, index)}>
                   <img src="/play-green.svg" alt="Tocar episódio"/>
                 </button>
               </li>
@@ -95,7 +96,7 @@ export default function Home({latestEpisodes, restEpisodes}:HomeProps) {
             </tr>
           </thead>
           <tbody>
-            {restEpisodes.map(episode => {
+            {restEpisodes.map((episode, index) => {
               return (
                 <tr key={episode.id}>
                   <td style={{width: 72}}>
@@ -116,7 +117,9 @@ export default function Home({latestEpisodes, restEpisodes}:HomeProps) {
                   <td style={{width: 100}}>{episode.publishedAt}</td>
                   <td>{episode.durationAsString}</td>
                   <td>
-                    <button type="button" onClick={()=> play(episode)}>
+                    <button 
+                    type="button" 
+                    onClick={()=> playList(espisodeList, index + latestEpisodes.length)}>
                       <img src="/play-green.svg" alt="Tocar episódio" />
                     </button>
                   </td>
@@ -158,8 +161,8 @@ export const getStaticProps:GetStaticProps = async () => {
 
   return {
     props: {
-      restEpisodes,
-      latestEpisodes
+      latestEpisodes,
+      restEpisodes
     },
     revalidate: 60 * 60 * 8,
   }
