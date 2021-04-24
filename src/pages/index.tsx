@@ -1,4 +1,5 @@
 import { GetStaticProps } from 'next'
+import Head from 'next/head'
 import Image from 'next/image'
 
 import usePlayer from '../hooks/usePlayer';
@@ -48,6 +49,9 @@ export default function Home({latestEpisodes, restEpisodes}:HomeProps) {
 
   return (
     <div className={styles.homePage}>
+      <Head>
+        <title>Home | Podcastr</title>
+      </Head>
       <section className={styles.latestEpisodes}>
         <h2>Últimos lançamentos</h2>
 
